@@ -115,11 +115,18 @@ func chanExample(done chan bool) {
 	done <- true // Expressão para escrever no canal done
 }
 
+func deadLockEg(deadLock chan bool) {
+	fmt.Println("DeadLock")
+}
+
 func callingRoutineWithChan() {
 	fmt.Println("CHAN EXAMPLE ------------")
 	done := make(chan bool) //Definimos um canal do tipo bool
+	deadLock := make(chan bool)
 	go chanExample(done)
+	//go deadLockEg(deadLock) Se chamarmos essa função, ocorrerá um erro de deadLock uma vez que estamos lendo o valor do chan sendo que não há função escrevendo nele
 	chanValue := <-done // Expressão para ler do canal done
+	<-deadLock
 	fmt.Println(chanValue)
 	fmt.Println("End of the function that called de routine")
 }
