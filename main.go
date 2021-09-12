@@ -5,12 +5,15 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"time"
 ) //Package fmt implements formatted I/O with functions analogous to C's printf and scanf.
 
 func main() {
-	typeBinding()    //Função que contém demosntração do type binding
-	dataType()       // Função que demonstra os tipos de dados
-	loopStatements() // Função que demonstra instruções de controle
+	typeBinding()            //Função que contém demosntração do type binding
+	dataType()               // Função que demonstra os tipos de dados
+	loopStatements()         // Função que demonstra instruções de controle
+	callingRoutine()         // Função que chama e demonstra programação concorrente
+	callingRoutineWithChan() // Função que chama e demonstra o uso de canais para comunicação de rotinas
 }
 
 /*
@@ -84,4 +87,39 @@ func loopStatements() {
 			fmt.Println("Última execução do loop while, atigimos o valor 9:", j)
 		}
 	}
+	fmt.Println()
+}
+
+/*
+	Nessa função, vamos demonstrar a programação concorrente implementada
+	pela função goroutine
+*/
+func concurrentProgramming() {
+	fmt.Println("Hello World goroutine!")
+}
+
+func callingRoutine() {
+	fmt.Println("CONCURRENT PROGRAMMING -------------")
+	go concurrentProgramming()  // Usamos a chave go para criar uma nova Goroutine execuntando concorrentemente
+	time.Sleep(1 * time.Second) // Utilizado o sleep para dar tempo da função printar
+	fmt.Println("End calling routine")
+	fmt.Println()
+}
+
+/*
+	Nessa função, vamos demonstar o uso de canais,
+	pensados como pipes utilizados para routines se comunicarem
+*/
+func chanExample(done chan bool) {
+	fmt.Println("Go routine print")
+	done <- true // Expressão para escrever no canal done
+}
+
+func callingRoutineWithChan() {
+	fmt.Println("CHAN EXAMPLE ------------")
+	done := make(chan bool) //Definimos um canal do tipo bool
+	go chanExample(done)
+	chanValue := <-done // Expressão para ler do canal done
+	fmt.Println(chanValue)
+	fmt.Println("End of the function that called de routine")
 }
