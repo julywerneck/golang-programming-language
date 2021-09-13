@@ -14,6 +14,8 @@ func main() {
 	loopStatements()         // Função que demonstra instruções de controle
 	callingRoutine()         // Função que chama e demonstra programação concorrente
 	callingRoutineWithChan() // Função que chama e demonstra o uso de canais para comunicação de rotinas
+	callRecursividade()      // Função que demonstra a recursividade
+	aliasing()               // Função que demonstra aliasing na linguagem
 }
 
 /*
@@ -122,11 +124,53 @@ func deadLockEg(deadLock chan bool) {
 func callingRoutineWithChan() {
 	fmt.Println("CHAN EXAMPLE ------------")
 	done := make(chan bool) //Definimos um canal do tipo bool
-	deadLock := make(chan bool)
+	//deadLock := make(chan bool)
 	go chanExample(done)
 	//go deadLockEg(deadLock) Se chamarmos essa função, ocorrerá um erro de deadLock uma vez que estamos lendo o valor do chan sendo que não há função escrevendo nele
 	chanValue := <-done // Expressão para ler do canal done
-	<-deadLock
+	//<-deadLock
 	fmt.Println(chanValue)
 	fmt.Println("End of the function that called de routine")
+	fmt.Println()
+}
+
+/*
+	Nessa função demonstramos o uso da recursividade calculando o valor fatorial de um inteiro.
+	A função chama a si mesmo até atingir o caso base do fatorial.
+*/
+func fatorialRecursiva(n int) int {
+	if n == 0 {
+		fmt.Println("RECURSIVIDADE -----------")
+		return 1
+	}
+	return n * fatorialRecursiva(n-1) //Chamda recursiva
+}
+
+func callRecursividade() {
+	fmt.Println(fatorialRecursiva(7))
+	fmt.Println()
+}
+
+/*
+	Nessa função, vamos demonstrar a situação de aliasing,
+	onde o mesmo lugar de memória é acessado por diferentes variaveis
+*/
+type Ponto struct {
+	x int
+	y int
+}
+
+func aliasing() {
+	fmt.Println("ALIASING --------")
+	pp := &Ponto{2, 3}
+	pp2 := pp
+	pp2.y++
+	fmt.Printf("*pp\t%#v\n", *pp)
+	fmt.Printf("*pp2\t%#v\n", *pp2)
+
+	s := []int{1, 2, 3}
+	s2 := s
+	s2[0]++
+	fmt.Println("s:", s)
+	fmt.Println("s2:", s2)
 }
